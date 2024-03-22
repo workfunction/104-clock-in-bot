@@ -30,3 +30,6 @@ class Text:
 class Config:
     TIMEOUT_AUTH = 10 * 60 * 1000     # 10 min
     TIMEOUT_OPERATION = 2 * 60 * 1000 # 2 min
+    HEADERS_PATH = './104_http_headers.json'
+    FB_CRED_PATH = './firebase-cred.json'
+    COOKIE_PATH  = './cookie.json'
