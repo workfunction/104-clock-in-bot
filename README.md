@@ -4,9 +4,7 @@
 
 ## 注意事項
 
-**警告**
-
-1. **!!! 重要 請先測試您的帳號登入流程 !!!**
+1. **!!! 請先測試您的帳號登入流程 !!!**
 
    本機器人未經過完整測試，請先使用無痕視窗登入 [https://pro.104.com.tw/psc2](https://pro.104.com.tw/psc2)。
 
@@ -18,7 +16,7 @@
 
    任何更改密碼等帳號通知都可能導致登入失敗！！
 
-2. **目前僅支援 macOS**
+2. **!!! 目前僅支援 macOS !!!**
 
    請注意，目前此程式僅支援 macOS 系統，其他操作系統可能會遇到問題。
 
@@ -101,7 +99,7 @@ python main.py <username> <password> [-k <aes_key>] [-f <firebase_url>] [-t <tea
 
    首先，建立一個名為 `secret.sh` 的檔案，並填入以下變數，替換其中的內容為你的帳號資訊和其他必要資料：
 
-   ```
+   ```bash
    # Your email address for 104 account
    USER="user@example.com"
    # Your password for 104 account
