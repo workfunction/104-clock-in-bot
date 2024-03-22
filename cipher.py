@@ -25,10 +25,3 @@ class AesCipher:
 
     def _unpad(self, s):
         return s[:-ord(s[len(s)-1:])]
-
-# Example usage:
-#crypto = AESCipher("9cecc06621b370151c78f667543ae01e1b20285611425197f6e3449f8a056b60")
-#encrypted_text = crypto.encrypt('Hello, World!')
-#print("Encrypted:", encrypted_text)
-#decrypted_text = crypto.decrypt(encrypted_text)
-#print("Decrypted:", decrypted_text)

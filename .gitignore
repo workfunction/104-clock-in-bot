@@ -1,6 +1,5 @@
 __pycache__/
 env-104-bot/
 .DS_Store
-secret.sh
-firebase-cred.json
-cookie.json
+*.sh
+*.json

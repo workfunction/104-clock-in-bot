@@ -8,7 +8,7 @@ import logging
 import os
 
 from config import Config, Text, ExitCode
-from util import CookieIO
+from util import CookieStorage
 from util import get_workday, wait_get_otp, post_clock_in
 
 def xpath_by_text(tag, text) -> str:
@@ -23,13 +23,13 @@ class ClockIn104Bot:
         self.cookie_str = ''
         self.username = username
         self.password = password
-        self.cookie_io = CookieIO(aes_key, {
+        self.cookie_storage = CookieStorage(aes_key, {
             'firebase_url': firebase_url,
             'cred_path': Config.FB_CRED_PATH
         })
-        self.driver = self.init_driver()
+        self.driver = self._init_driver()
 
-    def init_driver(self):
+    def _init_driver(self):
         options = Options()
         options.add_argument('--headless')
         options.add_argument('--window-size=1024,768')
@@ -48,7 +48,7 @@ class ClockIn104Bot:
         service = Service()
         return webdriver.Chrome(service=service, options=options)
 
-    def login_password(self):
+    def _login_password(self):
         logging.info('[Login] Start to login 104.')
 
         # Go to the login page. If the user is already logged in, the webpage will
@@ -136,7 +136,7 @@ class ClockIn104Bot:
         logging.debug(f'[Login] Unexpected error occurred. Fetched text by xpath: {text}')
         raise Exception('Unknown error occurred when trying to login.')
 
-    def login_email_verify(self):
+    def _login_email_verify(self):
         # Wait until the '身分驗證' text is available.
         WebDriverWait(self.driver, Config.TIMEOUT_OPERATION).until(
             EC.presence_of_element_located((By.XPATH, xpath_by_text('div', Text.EMAIL_VERIFY)))
@@ -163,7 +163,7 @@ class ClockIn104Bot:
             EC.url_to_be('https://pro.104.com.tw/psc2')
         )
 
-    def load_cookies(self):
+    def _load_cookies(self):
         logging.info('[Cookie] Start to load cookies.')
 
         # Connect to dummy page.
@@ -172,7 +172,7 @@ class ClockIn104Bot:
 
         # Try to load cookies.
         try:
-            json_cookie = self.cookie_io.get_cookies()
+            json_cookie = self.cookie_storage.get_cookies()
             cookies = json_cookie['cookies']
 
             # If username or password is not explicitly set, load from credential.
@@ -195,12 +195,12 @@ class ClockIn104Bot:
         else:
             logging.info('[Bot] Continue to check-in')
 
-        self.load_cookies()
+        self._load_cookies()
 
-        result = self.login_password()
+        result = self._login_password()
         if result == ExitCode.NEED_EMAIL_AUTH:
             # Login failed. Email verification required.
-            result = self.login_email_verify()
+            result = self._login_email_verify()
 
         if result is not None:
             # Failed to login.
@@ -215,7 +215,7 @@ class ClockIn104Bot:
             'password': self.password,
             'cookies': cookies
         }
-        self.cookie_io.save_cookies(cookie_dict)  # never raise error
+        self.cookie_storage.save_cookies(cookie_dict)  # never raise error
 
         # Post 104 clock in API with logged in cookies.
         return post_clock_in(cookies)
